@@ -15,7 +15,7 @@
 !.idea/runConfigurations
 *.iml
 **/.DS_Store
-
+.idea/workspace.xml
 src/github.com
 src/golang.org
 src/gopkg.in
