@@ -7,10 +7,9 @@ go:
 - 1.10.x
 
 before_install:
-- go get -v github.com/golang/lint/golint
-
-script:
+- chmod +x dep.sh
 - ./dep.sh
-#- ./pre-commit
-#- go test -cpu=1,2  -v ./...
+- go get -v github.com/golang/lint/golint
+script:
+- ./pre-commit
 - go test -v ./...
