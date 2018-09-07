@@ -8,5 +8,6 @@ before_install:
 - go get -v github.com/golang/lint/golint
 
 script:
+- ./dep.sh
 - ./pre-commit
 - go test -cpu=1,2  -v ./...
