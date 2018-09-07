@@ -2,6 +2,12 @@ sudo: false
 
 language: go
 
+branches:
+  only:
+  - develop
+  - master
+  - feature/*
+
 go:
 #- 1.9.x
 - 1.10.x
