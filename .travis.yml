@@ -1,14 +1,17 @@
+sudo: false
+
 language: go
 
 go:
-- 1.9.x
+#- 1.9.x
 - 1.10.x
-- release
-- tip
 
 before_install:
-- go get -v github.com/golang/lint/golint
-
+-  export GOPATH=$HOME/gopath/src/github.com/ratoshniuk/galcon-backend-go
+-  export PATH=$HOME/gopath/bin:$PATH
+- chmod +x dep.sh
+- ./dep.sh
+#- go get -v github.com/golang/lint/golint
 script:
-- ./pre-commit
-- go test -cpu=1,2  -v ./...
+#- ./pre-commit
+- go test -v ./...
