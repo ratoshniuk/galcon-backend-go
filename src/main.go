@@ -2,7 +2,7 @@ package main
 
 import (
     "flag"
-    "ws"
+    "github/com/galcon-backend-go/ws"
 )
 
 var addr = flag.String("addr", "localhost:8080", "http service address")
