@@ -11,7 +11,7 @@ before_install:
 -  export PATH=$HOME/gopath/bin:$PATH
 - chmod +x dep.sh
 - ./dep.sh
-- go get -v github.com/golang/lint/golint
+#- go get -v github.com/golang/lint/golint
 script:
-- ./pre-commit
+#- ./pre-commit
 - go test -v ./...
