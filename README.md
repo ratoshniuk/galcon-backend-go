@@ -1,19 +1,17 @@
-### HOW TO RUN
+[![Build Status](https://travis-ci.org/ratoshniuk/galcon-backend-go.svg?branch=develop)](https://travis-ci.org/ratoshniuk/galcon-backend-go)
 
-1. define GOPATH in your ./bash_profile
 
-    ```
+## Bootstrapping 
+
+- set up GOPATH in your ~/.bash_profile settings
+
+ ```
     export GOPATH=/Users/rtwnk/Documents/school/galcon-backend
     export PATH=$GOPATH/bin:$PATH
 
-    ```
+```
 
-2. launch ./dep.sh
+- run ./dep.sh
+- perform `git checkout .idea` to fetch runConfigurations (in case of usage IDEA)
+- Enjoy
 
-3. if you use .idea, please make `git checkout .idea` to use prepared runConfigurations
-
-4. Install docker dependecies (i.e. DBs, etc)
-
-5. Tune confiog.file
-
-6. Enjoy!
