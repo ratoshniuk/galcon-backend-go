@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ratoshniuk/galcon-backend-go.svg?branch=develop)](https://travis-ci.org/ratoshniuk/galcon-backend-go)
+
+
 ## Bootstrapping 
 
 - set up GOPATH in your ~/.bash_profile settings
