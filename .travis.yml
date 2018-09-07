@@ -1,3 +1,5 @@
+sudo: false
+
 language: go
 
 go:
@@ -9,5 +11,6 @@ before_install:
 
 script:
 - ./dep.sh
-- ./pre-commit
-- go test -cpu=1,2  -v ./...
+#- ./pre-commit
+#- go test -cpu=1,2  -v ./...
+- go test -v ./...
