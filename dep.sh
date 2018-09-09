@@ -10,6 +10,6 @@ go get $2 $1
 get_dep github.com/gorilla/websocket
 get_dep github.com/gorilla/mux
 get_dep github.com/jinzhu/gorm
-
+get_dep github.com/hokaccha/go-prettyjson
 
 echo "...done"
