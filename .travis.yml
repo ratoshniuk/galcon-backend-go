@@ -1,6 +1,13 @@
 sudo: false
 
 language: go
+branches:
+- develop
+- master
+- feature/*
+
+env:
+- FOO=$FOO
 
 go:
 #- 1.9.x

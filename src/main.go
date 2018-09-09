@@ -1,13 +1,24 @@
 package main
 
 import (
-    "flag"
-    "github/com/galcon-backend-go/ws"
+	"app"
+	"config"
+	"flag"
+	"galcon-backend-go/rest"
+	"galcon-backend-go/ws"
 )
 
 var addr = flag.String("addr", "localhost:8080", "http service address")
 
 func main() {
-    ws.StartServer(*addr)
-    ws.StartClient(*addr)
+
+	flag.Parse()
+
+	context := &app.Context{}
+	context.Initialize(config.GetConfig())
+	context.SetRestAPI(&rest.Routes)
+	context.SetSocketAPI(&ws.Routes)
+	context.Run(*addr)
+
+	//ws.StartClient(*addr)
 }
