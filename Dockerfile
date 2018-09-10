@@ -16,6 +16,12 @@ RUN \
 
 RUN go build -o galcon .
 
-CMD ./galcon
+CMD if [ ${APP_ENV} = production ]; \
+	then \
+	./galcon; \
+	else \
+	go get github.com/pilu/fresh && \
+	fresh -c fresh.conf; \
+	fi
 
 EXPOSE 8080
