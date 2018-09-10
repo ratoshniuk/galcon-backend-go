@@ -18,6 +18,7 @@
 .idea/workspace.xml
 src/github.com
 src/golang.org
+src/cloud.google.com
 src/gopkg.in
 
 bin
