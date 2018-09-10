@@ -1,5 +1,8 @@
 package ws
 
-import "galcon-backend-go/ws/dummy"
+import (
+    "galcon-backend-go/ws/chat"
+)
 
-var Routes = dummy.Routes
+var Routes = chat.Routes
+
