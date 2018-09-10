@@ -2,11 +2,12 @@ package info
 
 import (
 	"app"
-	"bytes"
+	"bufio"
+	"fmt"
 	"galcon-backend-go/rest/common"
 	"math"
 	"net/http"
-	"os/exec"
+	"os"
 	"strings"
 	"time"
 )
@@ -16,7 +17,7 @@ var startTime = time.Now()
 func GetInfoHandler(ctx *app.Context, rw http.ResponseWriter, req *http.Request) {
 
 	common.RespondJSON(rw, http.StatusOK, &Info{
-		Version:         "1.0.0-SNAPSHOT",
+		Version:         fetchVersion(),
 		Revision:        fetchLastCommit(),
 		Owner:           "ratoshniuk",
 		UptimeInSeconds: math.Trunc(time.Since(startTime).Seconds()),
@@ -24,14 +25,41 @@ func GetInfoHandler(ctx *app.Context, rw http.ResponseWriter, req *http.Request)
 }
 
 func fetchLastCommit() string {
-	cmd := exec.Command("bash", "-c", "git log | head -1")
-	cmdOutput := &bytes.Buffer{}
-	cmd.Stdout = cmdOutput
-	err := cmd.Run()
+	f, err := os.Open("revision.txt")
 	if err != nil {
+		fmt.Printf("error opening file: %v\n",err)
+		os.Exit(1)
+	}
+	r := bufio.NewReader(f)
+	s, e := Readln(r)
+	if e != nil {
 		return "UNKNOWN"
 	}
-	out := string(cmdOutput.Bytes())
-	version := strings.Replace(out, "commit ", "", 1)
-	return version
+	return strings.Replace(s, "commit ", "", 1)
+}
+
+func fetchVersion() string {
+	f, err := os.Open("version.txt")
+	if err != nil {
+		fmt.Printf("error opening file: %v\n",err)
+		os.Exit(1)
+	}
+	r := bufio.NewReader(f)
+	s, e := Readln(r)
+	if e != nil {
+		return "UNKNOWN"
+	}
+	return s
+}
+
+func Readln(r *bufio.Reader) (string, error) {
+	var (isPrefix bool = true
+		err error = nil
+		line, ln []byte
+	)
+	for isPrefix && err == nil {
+		line, isPrefix, err = r.ReadLine()
+		ln = append(ln, line...)
+	}
+	return string(ln),err
 }

@@ -1,11 +1,15 @@
 sudo: false
 language: go
+services:
+- docker
 branches:
 - develop
 - master
 - feature/*
 env:
-- FOO=$FOO
+  heroku:
+    secure: ooZdKe5q1GyHCNNWJJ/BJ5W5OwjrjSZdrju9UbiG/rM8zoCGpHnN/IhlVvWDxYlgbTWzZdf1oRoID9zZAFwcmT6cisvOFEvUuJZOXE6ZSu3Pl7o+P4byx51LWB4wcBNnRT1lSpr5ArAqs7YWr4u7jjhio7HQ1jc1+x4HOQq7gxbf8pYCZ73sM6J6ZSiAcFvR35pVbVeYxPbBjB8qHmugL08ZuCx2v+pMlSSxBf2rscvkG+A/sSCQp80LxgO72F6b3tkdLZgsrI/IfOvujToz2DKTkfOCsEfjquzvTrZGFFc+xRKAx3jVdR9hFfpmTKgHrWSEMwmyM8k00AvyGaYH7jJd1OlsiZtn9BtUUg+0sHICTKcjmHrz0KD0qxnvYWWtyDwuvKXQNE0DRne7SU3TyvaEzVVVfgNOXtWDnUE4IKT9GIRNG9s+eUEr/DFFxUsVAyUsExJURk5K/+NKrHZ94yqXjhEjx2us6dQ42FVImFsMpKnx1tfW8q0Dh4xS+TzwsxLIzEwn1OoTKgQIxoCrTg8I8gXfNEu9d+lrd7j7eKxC9jQq85qtaunU0pYxNiP1N2X7edhIp1YOaTOgiqhXbTrhfEUcSmIohYzVaZ/I0R9slywyhUISP5W2yh+6QegB85A2CW4nuqahmrGl9bnf0QIGnSUxoh9xVY5eBgCkqwM=
+    APP_NAME : damp-ravine-74691
 go:
 - 1.10.x
 before_install:
@@ -14,11 +18,6 @@ before_install:
 - chmod +x dep.sh
 - "./dep.sh"
 script:
+- echo "$(git log | head -1)" > $GOPATH/revision.txt
+- echo "$heroku.APP_NAME"
 - go test -timeout 600s -v ./src/galcon-backend-go/...
-deploy:
-  provider: heroku
-  app: damp-ravine-74691
-  on:
-    repo: ratoshniuk/galcon-backend-go
-  api_key:
-    secure: FC4KhVGYaDpbYUNMSNXaktkMkG2SSMSxlkAw4BoDhFFWwYWox872yYl8h68sOnQirNqRTJ2SENbtS7nSG353C6TL+FvMBqJhWcXbQWi3d1SyqDFbvgz3+xXuob0BQy7VLAxs5MB1vAhkjXCRKPmanqBwA+QXOPeMSpZDf/x824Yw1JqOyQx4ts1NcQ80o9aBui/caODiGM1GtQhGQGzWuUX3m7GRGZcwBg8sDSidkZQfAYkglzGjo5ZsdL85ikSwF5OBYdlOeV+6HQgIPVjRijTslEukQTVTq9KdW5iQS4GoZrnRKz+j7WBG+V3aVXkMSRWQW8u+BT+IGyjOohtSQFj3xiTF2m0gnXyF/WeWdrD4uWcjitga8kIuVsB4Rmcfs6xIxT4Krq+hk7oeocvzKSIbGBZ55LZxjOaxa0vQYBiEkK6EJHV09v+eyndYOysItCHCs2hriN016goGPUf1QO8WG8c3i76i56uB0i7VEotltOJ2BJi9gGChnAkWOBQHORyQyAVex4lmKPpoOh9Y77LpdcWh5cZ/IqdM0f/pM0aIV7SL69PQ6eG2sRUvq3plhCjyJWvBrAFw2eG3MwiVWzg5wVVjW6WYvYMd787cI4+C0KZq7u5LvqPql33zOX/hP48TM/Y85ZvR4OJlAXR33AthlVtsaMMHmr8GYUvXe4Q=
