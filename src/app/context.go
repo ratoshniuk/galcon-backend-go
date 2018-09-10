@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"galcon-backend-go/wsctx"
+	"os"
 )
 
 // App has router and db instances
@@ -64,5 +65,5 @@ func (ctx *Context) SetSocketAPI(routes *[]*WSEndpoint) {
 
 func (ctx *Context) Run(port string) {
 	log.SetFlags(0)
-	log.Fatal(http.ListenAndServe(port, ctx.Router))
+	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), ctx.Router))
 }

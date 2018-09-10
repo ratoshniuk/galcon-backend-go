@@ -23,3 +23,5 @@ src/gopkg.in
 
 bin
 pkg
+
+docker login --username=_ --password=199f592d-2e30-4a87-9d24-95721ccc0fd8 registry.heroku.com
