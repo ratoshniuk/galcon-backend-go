@@ -17,8 +17,7 @@ script:
 - go test -timeout 600s -v ./src/galcon-backend-go/...
 deploy:
   provider: heroku
-  on:
-    branch: develop
+  on: develop
   app:
     develop: damp-ravine-74691
   api_key:
