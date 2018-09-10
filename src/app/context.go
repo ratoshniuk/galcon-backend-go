@@ -2,17 +2,17 @@ package app
 
 import (
 	"config"
+	"galcon-backend-go/wsctx"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"galcon-backend-go/wsctx"
 	"os"
 )
 
 // App has router and db instances
 type Context struct {
 	Router *mux.Router
-	Hub *wsctx.Hub
+	Hub    *wsctx.Hub
 }
 
 type METHOD string
@@ -65,5 +65,5 @@ func (ctx *Context) SetSocketAPI(routes *[]*WSEndpoint) {
 
 func (ctx *Context) Run(port string) {
 	log.SetFlags(0)
-	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), ctx.Router))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), ctx.Router))
 }

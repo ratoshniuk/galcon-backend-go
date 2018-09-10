@@ -1,9 +1,8 @@
 package info
 
 type Info struct {
-	Version  string
-	Branch   string
-	Revision string
-	Owner    string
-	Uptime   int64
+	Version         string
+	Revision        string
+	Owner           string
+	UptimeInSeconds float64
 }
