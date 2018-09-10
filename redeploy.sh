@@ -1,10 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
- docker login --username=_ --password="($heroku.HEROKU_AUTH)" registry.heroku.com
 
- docker build -t registry.heroku.com/$HEROKU_APP_NAME/web . --build-arg app_env=production
+echo "logging in docker..."
+docker login --username=_ --password=$HEROKU_AUTH registry.heroku.com
 
- docker push registry.heroku.com/$HEROKU_APP_NAME/web
+echo "builing production image..."
+docker build -t registry.heroku.com/$HEROKU_APP_NAME/web . --build-arg app_env=production
 
- heroku container:release web
+echo "pushing to heroku..."
+docker push registry.heroku.com/$HEROKU_APP_NAME/web
+
+echo "releasing..."
+heroku container:release web
 
