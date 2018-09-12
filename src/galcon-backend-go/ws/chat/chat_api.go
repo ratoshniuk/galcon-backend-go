@@ -7,7 +7,7 @@ import (
     "galcon-backend-go/wsctx"
 )
 
-func ServeHome(ctx *app.Context, w http.ResponseWriter, r *http.Request) {
+func ServeHome(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request) {
     log.Println(r.URL)
 
     if r.URL.Path != "/" {
@@ -21,7 +21,7 @@ func ServeHome(ctx *app.Context, w http.ResponseWriter, r *http.Request) {
     http.ServeFile(w, r, "src/github.com/gorilla/websocket/examples/chat/home.html")
 }
 
-func ServeWs(ctx *app.Context, w http.ResponseWriter, r *http.Request) {
+func ServeWs(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request) {
     conn, err := wsctx.Upgrader.Upgrade(w, r, nil)
     if err != nil {
         log.Println(err)
