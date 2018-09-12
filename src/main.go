@@ -14,7 +14,7 @@ func main() {
 
     flag.Parse()
 
-    context := &app.Context{}
+    context := &app.GlobalContext{}
     context.Initialize(config.GetConfig())
     context.SetRestAPI(&rest.Routes)
     context.SetSocketAPI(&ws.Routes)

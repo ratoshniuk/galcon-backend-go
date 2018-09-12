@@ -25,23 +25,23 @@ func respondError(w http.ResponseWriter, code int, message string) {
 }
 
 // Get wraps the router for GET method
-func GET(path string, f func(ctx *app.Context, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
+func GET(path string, f func(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
 	return requestBuilder(app.GET, path, f)
 }
 
-func POST(path string, f func(ctx *app.Context, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
+func POST(path string, f func(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
 	return requestBuilder(app.POST, path, f)
 }
 
-func PUT(path string, f func(ctx *app.Context, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
+func PUT(path string, f func(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
 	return requestBuilder(app.PUT, path, f)
 }
 
-func DELETE(path string, f func(ctx *app.Context, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
+func DELETE(path string, f func(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
 	return requestBuilder(app.DELETE, path, f)
 }
 
-func requestBuilder(method app.METHOD, path string, f func(ctx *app.Context, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
+func requestBuilder(method app.METHOD, path string, f func(ctx *app.GlobalContext, w http.ResponseWriter, r *http.Request)) *app.RestEndpoint {
 	return &app.RestEndpoint{
 		URL:     path,
 		Handler: f,

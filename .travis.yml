@@ -8,16 +8,17 @@ branches:
 - master
 - feature/*
 env:
-  secure: FBAFun2s6t3/I1uOc66Zb+me1emfFURjEGGYNi/tD7HaUDdxFRuNDsgudVmIuASa6KqsuNQJrd1z/DkpzKxVBqvvnBSlgKi0x8ChnDH5Io6e83IVpvh137mCwQuMY01B7I7kKSMidOm7RwlyLucl40nW6lerAZzAFeIVyPFRLMT9pjL9pz3W+TfTMC5vDKKqYxRAkAygijOAcBqioLUbi31CQeTeTelgArlMH3d8pWKtyFNV+zbjKf30xrdZ5L7NieeuC2YwfM1MKnSS27TYnDbDklyE+5QIR5NLXYxS19+AcqL4kvrsYCk8Wzeo00t1lEX1JKnkV7ivxw26iIobFnfDFO+f87bwVXwAEzMQwSR/itbKFGoWEV/dv8VKEQXdWuYB0haDCNASfQyVTc7xLrjXBbnkEHcV7Yz858qoUTAS74OlESx6hvB9lOXAomftFfKR4O2CUvBkc163szRgtiUpwRLqj6TvExng7R5ZZph7k0JVvcSiz15vsGEIx7uVX1uBzWdSf0BSyTdDsZpV2xpxV1BTW3VWAlhzwJYEX2JfFDKM6075c4B/lWCX9yFSYc1C6pSUiD/rC1wsYWQv29V2Xz877vCEwDK/fnAK/G56Yjm3DvXNUg3Iwyw5aV+bl2pxYbhDyajGzBHe8PgCRFYYjDDbU6KLhJEu4QWr+Fs=
+#  secure: FBAFun2s6t3/I1uOc66Zb+me1emfFURjEGGYNi/tD7HaUDdxFRuNDsgudVmIuASa6KqsuNQJrd1z/DkpzKxVBqvvnBSlgKi0x8ChnDH5Io6e83IVpvh137mCwQuMY01B7I7kKSMidOm7RwlyLucl40nW6lerAZzAFeIVyPFRLMT9pjL9pz3W+TfTMC5vDKKqYxRAkAygijOAcBqioLUbi31CQeTeTelgArlMH3d8pWKtyFNV+zbjKf30xrdZ5L7NieeuC2YwfM1MKnSS27TYnDbDklyE+5QIR5NLXYxS19+AcqL4kvrsYCk8Wzeo00t1lEX1JKnkV7ivxw26iIobFnfDFO+f87bwVXwAEzMQwSR/itbKFGoWEV/dv8VKEQXdWuYB0haDCNASfQyVTc7xLrjXBbnkEHcV7Yz858qoUTAS74OlESx6hvB9lOXAomftFfKR4O2CUvBkc163szRgtiUpwRLqj6TvExng7R5ZZph7k0JVvcSiz15vsGEIx7uVX1uBzWdSf0BSyTdDsZpV2xpxV1BTW3VWAlhzwJYEX2JfFDKM6075c4B/lWCX9yFSYc1C6pSUiD/rC1wsYWQv29V2Xz877vCEwDK/fnAK/G56Yjm3DvXNUg3Iwyw5aV+bl2pxYbhDyajGzBHe8PgCRFYYjDDbU6KLhJEu4QWr+Fs=
   HEROKU_APP_NAME: damp-ravine-74691
 go:
 - 1.10.x
 before_install:
+- docker run --name cassandra -p 127.0.0.1:9042:9042 -d cassandra
 - export GOPATH=$HOME/gopath/src/github.com/ratoshniuk/galcon-backend-go
 - export PATH=$HOME/gopath/bin:$PATH
 - chmod +x dep.sh
 - "./dep.sh"
 script:
 - echo "$(git log | head -1)" > $GOPATH/revision.txt
-- echo "$heroku.APP_NAME"
+- echo "$HEROKU_APP_NAME"
 - go test -timeout 600s -v ./src/galcon-backend-go/...

@@ -14,7 +14,7 @@ import (
 
 var startTime = time.Now()
 
-func GetInfoHandler(ctx *app.Context, rw http.ResponseWriter, req *http.Request) {
+func GetInfoHandler(ctx *app.GlobalContext, rw http.ResponseWriter, req *http.Request) {
 
 	common.RespondJSON(rw, http.StatusOK, &Info{
 		Version:         fetchVersion(),

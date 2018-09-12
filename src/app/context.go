@@ -1,7 +1,8 @@
 package app
 
 import (
-	"config"
+	"galcon-backend-go/cassandra"
+	"galcon-backend-go/matchmaking"
 	"galcon-backend-go/wsctx"
 	"github.com/gorilla/mux"
 	"log"
@@ -10,8 +11,13 @@ import (
 )
 
 // App has router and db instances
-type Context struct {
+type GlobalContext struct {
 	Router *mux.Router
+	cassandraContext *cassandra.CassandraContext
+
+	UserRepository matchmaking.UserRepository
+	GameRoomRepository matchmaking.GameRoomRepository
+	// Temporary
 	Hub    *wsctx.Hub
 }
 
@@ -27,29 +33,54 @@ const (
 type RestEndpoint struct {
 	URL     string
 	Method  METHOD
-	Handler func(*Context, http.ResponseWriter, *http.Request)
+	Handler func(*GlobalContext, http.ResponseWriter, *http.Request)
 }
 
 type WSEndpoint struct {
 	URL     string
-	Handler func(*Context, http.ResponseWriter, *http.Request)
+	Handler func(*GlobalContext, http.ResponseWriter, *http.Request)
 }
 
-func (ep *WSEndpoint) AsHandler(ctx *Context) http.Handler {
+func (ep *WSEndpoint) AsHandler(ctx *GlobalContext) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ep.Handler(ctx, w, r)
 	})
 }
 
 // Initialize initializes the app with predefined configuration
-func (ctx *Context) Initialize(config *config.Config) {
+func (ctx *GlobalContext) Initialize() {
 	ctx.Hub = wsctx.NewHub()
 	go ctx.Hub.Run()
+
+	ctx.cassandraContext = &cassandra.CassandraContext{}
+	ctx.cassandraContext.Init("127.0.0.1", "galcon")
+
+	// TODO: replace dummy with c*
+	ctx.UserRepository = matchmaking.UserRepoCassandraImpl(ctx.cassandraContext)
+	ctx.GameRoomRepository = matchmaking.GameRoomDummyImpl()
+
+	ctx.cassandraContext.PerformDDL(ctx.UserRepository.DDL)
+	ctx.cassandraContext.PerformDDL(ctx.GameRoomRepository.DDL)
 
 	ctx.Router = mux.NewRouter()
 }
 
-func (ctx *Context) SetRestAPI(routes *[]*RestEndpoint) {
+// Initialize initializes the app with predefined configuration
+func (ctx *GlobalContext) InitializeDummy() {
+	ctx.Hub = wsctx.NewHub()
+	go ctx.Hub.Run()
+
+	//ctx.cassandraContext = &cassandra.CassandraContext{}
+	//ctx.cassandraContext.Init("127.0.0.1", "galcon")
+	//
+	// TODO: replace dummy with c*
+	ctx.UserRepository = matchmaking.UserRepoDummyImpl()
+	ctx.GameRoomRepository = matchmaking.GameRoomDummyImpl()
+
+	ctx.Router = mux.NewRouter()
+}
+
+func (ctx *GlobalContext) SetRestAPI(routes *[]*RestEndpoint) {
 	for _, r := range *routes {
 		ctx.Router.HandleFunc(r.URL, func(wr http.ResponseWriter, req *http.Request) {
 			r.Handler(ctx, wr, req)
@@ -57,13 +88,13 @@ func (ctx *Context) SetRestAPI(routes *[]*RestEndpoint) {
 	}
 }
 
-func (ctx *Context) SetSocketAPI(routes *[]*WSEndpoint) {
+func (ctx *GlobalContext) SetSocketAPI(routes *[]*WSEndpoint) {
 	for _, r := range *routes {
 		ctx.Router.Handle(r.URL, r.AsHandler(ctx))
 	}
 }
 
-func (ctx *Context) Run(port string) {
+func (ctx *GlobalContext) Run(port string) {
 	log.SetFlags(0)
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), ctx.Router))
 }
