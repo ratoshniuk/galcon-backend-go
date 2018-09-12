@@ -28,7 +28,7 @@ func TestBaseCrudDummy(t *testing.T) {
 func TestBaseCrudCassadra(t *testing.T) {
 
     var cass = cassandra.CassandraContext{}
-    err := cass.Init("127.0.0.1:9042", "test")
+    err := cass.Init("127.0.0.1", "test")
     if err != nil {
         t.Skipf("error while launchin c* tests. reason: %s", err.Error())
     }

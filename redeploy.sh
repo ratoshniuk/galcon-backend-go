@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-printf 'machine api.heroku.com\n    login mratoshniuk@gmail.com\n    password %s\n' 'login mratoshniuk@gmail.com' $HEROKU_AUTH > ~/.netrc
+printf 'machine api.heroku.com\n    login mratoshniuk@gmail.com\n    password %s\n' $HEROKU_AUTH > ~/.netrc
 
 echo "logging in docker..."
 docker login --username=_ --password=$HEROKU_AUTH registry.heroku.com
