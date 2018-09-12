@@ -2,24 +2,29 @@ sudo: false
 language: go
 services:
 - docker
-- heroku
+- node
+- npm
+
 branches:
 - develop
 - master
 - feature/*
 env:
-  secure: RFo5npe7KXsrrXRm5axV9KuiV61rvaGZm8H/c0GBLvlhx7DlJUvRrrfIp/eWNI4VDzmordFSLaCRLFrUv3i9ajF/AVLVbr3o7yNhrA5XU5EYKuGhbhjXYtmpT0IgSGmk2aXsfyNMGPAYkI/gqNop9V3rCBbYe7H1e7I9Atrw9NGD0lLShi696BWCTgw4ngRGDw+uu1HS7s+5yjoNp3jA/WohqUTnq6JrskuWVHy4Zky4A1T7fx1I6OG3XOR5Gdf6TEh1tkvceVxVvjIYJp5A3HFkGkU8gaeOukavg12HCVrvSph8HPE5KXnY43Vk44VSgSVZ34Lsed4VLNJhEwvE1GjUPHoZeQ/lbuS6ZVV7JFcPBCDi8lGz+2cqtyCDbhk0dU4sZTBD4n0qv5FcRpEjPNwRl5mn5FvQKCrDX8K8r6NAVEGaSYVHpSJUsWSD0iDlc/LC9c6tEzGGkvTOlLYcyAgLOkzpWgZ2XMTibgAci24HdR0grJfWxdRq/0KjI/4+pLkuBfONDYz0BqyvH7c0mqk1HwrdFEIo0pkzPdnukzsKjbOBn1V9tUyHfXroEF482U3Vrcx2RtgbUjbTHFuUs0Mej5PTFg3oWtKXT3UhM4GIRtmQ3XhNyVMZJMyV0+S4c8eeE84ypzoc0NvTA9HkVBb3lr8joowIXoMKL4eovZM=
+  HEROKU_APP_NAME: damp-ravine-74691
 go:
 - 1.10.x
 before_install:
+- npm install -g heroku
+- echo "$(heroku --version)"
 - docker run --name cassandra -p 127.0.0.1:9042:9042 -d cassandra
-- docker ps -a
 - export GOPATH=$HOME/gopath/src/github.com/ratoshniuk/galcon-backend-go
 - export PATH=$HOME/gopath/bin:$PATH
 - chmod +x dep.sh
+- chmod +x redeploy.sh
 - "./dep.sh"
 script:
 - echo "$(git log | head -1)" > $GOPATH/revision.txt
 - echo "$HEROKU_APP_NAME"
 - echo "$MY_SECRET_ENV"
 - go test -timeout 600s -v ./src/galcon-backend-go/...
+- "./redeploy.sh"

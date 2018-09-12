@@ -1,5 +1,6 @@
 #!/bin/sh
 
+printf 'machine api.heroku.com\n    login mratoshniuk@gmail.com\n    password %s\n' 'login mratoshniuk@gmail.com' $HEROKU_AUTH > ~/.netrc
 
 echo "logging in docker..."
 docker login --username=_ --password=$HEROKU_AUTH registry.heroku.com
@@ -11,5 +12,5 @@ echo "pushing to heroku..."
 docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
 echo "releasing..."
-heroku container:release web
+heroku container:release web --app  $HEROKU_APP_NAME
 

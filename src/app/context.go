@@ -94,7 +94,7 @@ func (ctx *GlobalContext) SetSocketAPI(routes *[]*WSEndpoint) {
 	}
 }
 
-func (ctx *GlobalContext) Run(port string) {
+func (ctx *GlobalContext) Run() {
 	log.SetFlags(0)
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), ctx.Router))
 }

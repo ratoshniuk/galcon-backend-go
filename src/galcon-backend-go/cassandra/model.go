@@ -12,18 +12,26 @@ type CassandraContext struct {
     KeyspaceSession *gocql.Session
 }
 
-func (ctx *CassandraContext) Init(host string, keyspace string) {
+func (ctx *CassandraContext) Init(host string, keyspace string) error {
     ctx.Cluster = gocql.NewCluster(host)
 
-    ctx.Session, _ = ctx.Cluster.CreateSession()
     var err error
+    if err != nil {
+        return err
+    }
+
+    ctx.Session, err = ctx.Cluster.CreateSession()
     err = ctx.Session.Query(fmt.Sprintf("CREATE KEYSPACE IF NOT EXISTS %s WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }", keyspace)).Exec()
     if err != nil {
-        log.Fatal(err)
+        return err
     }
 
     ctx.Cluster.Keyspace = keyspace
-    ctx.KeyspaceSession, _ = ctx.Cluster.CreateSession()
+    ctx.KeyspaceSession, err = ctx.Cluster.CreateSession()
+    if err != nil {
+        return err
+    }
+    return nil
 }
 
 func (ctx *CassandraContext) PerformDDL(ddls ...func(keyspace string) *string) {
