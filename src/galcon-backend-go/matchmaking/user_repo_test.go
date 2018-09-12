@@ -28,7 +28,7 @@ func TestBaseCrudDummy(t *testing.T) {
 func TestBaseCrudCassadra(t *testing.T) {
 
     var cass = cassandra.CassandraContext{}
-    cass.Init("127.0.0.1", "test")
+    cass.Init("127.0.0.1:9042", "test")
 
     defer cass.Stop(false)
 

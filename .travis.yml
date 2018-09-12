@@ -13,12 +13,12 @@ env:
 go:
 - 1.10.x
 before_install:
-- docker run --name cassandra -p 9042:9042 -d cassandra
+- docker run --name cassandra -p 127.0.0.1:9042:9042 -d cassandra
 - export GOPATH=$HOME/gopath/src/github.com/ratoshniuk/galcon-backend-go
 - export PATH=$HOME/gopath/bin:$PATH
 - chmod +x dep.sh
 - "./dep.sh"
 script:
 - echo "$(git log | head -1)" > $GOPATH/revision.txt
-- echo "$heroku.APP_NAME"
+- echo "$HEROKU_APP_NAME"
 - go test -timeout 600s -v ./src/galcon-backend-go/...
