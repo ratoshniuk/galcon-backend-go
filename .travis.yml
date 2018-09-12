@@ -14,6 +14,7 @@ go:
 - 1.10.x
 before_install:
 - docker run --name cassandra -p 127.0.0.1:9042:9042 -d cassandra
+- docker ps -a
 - export GOPATH=$HOME/gopath/src/github.com/ratoshniuk/galcon-backend-go
 - export PATH=$HOME/gopath/bin:$PATH
 - chmod +x dep.sh
