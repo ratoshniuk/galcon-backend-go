@@ -26,5 +26,8 @@ script:
 - echo "$(git log | head -1)" > $GOPATH/revision.txt
 - echo "$HEROKU_APP_NAME"
 - echo "$MY_SECRET_ENV"
-- go test -timeout 600s -v ./src/galcon-backend-go/...
+- go test -timeout 600s -v ./src/galcon-backend-go/... -coverprofile=coverage.txt -covermode=count
 - "./redeploy.sh"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
