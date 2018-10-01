@@ -12,13 +12,13 @@ import (
 
 // App has router and db instances
 type GlobalContext struct {
-	Router *mux.Router
+	Router           *mux.Router
 	cassandraContext *cassandra.CassandraContext
 
-	UserRepository matchmaking.UserRepository
+	UserRepository     matchmaking.UserRepository
 	GameRoomRepository matchmaking.GameRoomRepository
 	// Temporary
-	Hub    *wsctx.Hub
+	Hub *wsctx.Hub
 }
 
 type METHOD string
@@ -53,7 +53,11 @@ func (ctx *GlobalContext) Initialize() {
 	go ctx.Hub.Run()
 
 	ctx.cassandraContext = &cassandra.CassandraContext{}
-	ctx.cassandraContext.Init("127.0.0.1", "galcon")
+	err := ctx.cassandraContext.Init(os.Getenv("CASSANDRA_HOST"), "galcon")
+	if err != nil {
+		log.Fatalf("Error while setting up c* connectin.Cause: %s", err.Error())
+		os.Exit(1)
+	}
 
 	// TODO: replace dummy with c*
 	ctx.UserRepository = matchmaking.UserRepoCassandraImpl(ctx.cassandraContext)
