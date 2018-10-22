@@ -49,7 +49,6 @@ func (ctx *GlobalContext) Initialize() {
 	ctx.Hub = wsctx.NewHub()
 	go ctx.Hub.Run()
 
-	// TODO: replace dummy with c*
 	ctx.UserRepository = matchmaking.UserRepoDummyImpl()
 	ctx.GameRoomRepository = matchmaking.GameRoomDummyImpl()
 
@@ -61,10 +60,6 @@ func (ctx *GlobalContext) InitializeDummy() {
 	ctx.Hub = wsctx.NewHub()
 	go ctx.Hub.Run()
 
-	//ctx.cassandraContext = &cassandra.CassandraContext{}
-	//ctx.cassandraContext.Init("127.0.0.1", "galcon")
-	//
-	// TODO: replace dummy with c*
 	ctx.UserRepository = matchmaking.UserRepoDummyImpl()
 	ctx.GameRoomRepository = matchmaking.GameRoomDummyImpl()
 

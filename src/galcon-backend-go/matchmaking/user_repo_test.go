@@ -1,7 +1,6 @@
 package matchmaking
 
 import (
-	"galcon-backend-go/cassandra"
 	"github.com/gocql/gocql"
 	"testing"
 )

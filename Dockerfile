@@ -3,9 +3,6 @@ FROM golang
 ARG app_env
 ENV APP_ENV $app_env
 
-ARG cassandra_host=cassandra
-ENV CASSANDRA_HOST=$cassandra_host
-
 COPY src /go/src
 ADD fresh.conf /go/src
 ADD dep.sh /go/src
