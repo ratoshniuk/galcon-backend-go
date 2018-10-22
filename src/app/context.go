@@ -1,7 +1,6 @@
 package app
 
 import (
-	"galcon-backend-go/cassandra"
 	"galcon-backend-go/matchmaking"
 	"galcon-backend-go/wsctx"
 	"github.com/gorilla/mux"
@@ -12,9 +11,7 @@ import (
 
 // App has router and db instances
 type GlobalContext struct {
-	Router           *mux.Router
-	cassandraContext *cassandra.CassandraContext
-
+	Router             *mux.Router
 	UserRepository     matchmaking.UserRepository
 	GameRoomRepository matchmaking.GameRoomRepository
 	// Temporary
@@ -52,19 +49,9 @@ func (ctx *GlobalContext) Initialize() {
 	ctx.Hub = wsctx.NewHub()
 	go ctx.Hub.Run()
 
-	ctx.cassandraContext = &cassandra.CassandraContext{}
-	err := ctx.cassandraContext.Init(os.Getenv("CASSANDRA_HOST"), "galcon")
-	if err != nil {
-		log.Fatalf("Error while setting up c* connectin.Cause: %s", err.Error())
-		os.Exit(1)
-	}
-
 	// TODO: replace dummy with c*
-	ctx.UserRepository = matchmaking.UserRepoCassandraImpl(ctx.cassandraContext)
+	ctx.UserRepository = matchmaking.UserRepoDummyImpl()
 	ctx.GameRoomRepository = matchmaking.GameRoomDummyImpl()
-
-	ctx.cassandraContext.PerformDDL(ctx.UserRepository.DDL)
-	ctx.cassandraContext.PerformDDL(ctx.GameRoomRepository.DDL)
 
 	ctx.Router = mux.NewRouter()
 }
