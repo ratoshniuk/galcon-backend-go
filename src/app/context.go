@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"galcon-backend-go/matchmaking"
 	"galcon-backend-go/wsctx"
 	"github.com/gorilla/mux"
@@ -81,6 +82,13 @@ func (ctx *GlobalContext) SetSocketAPI(routes *[]*WSEndpoint) {
 }
 
 func (ctx *GlobalContext) Run() {
+	var port = os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8080"
+	}
+
+	log.Printf("Starting HTTP server at %s\n", port)
+
 	log.SetFlags(0)
-	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), ctx.Router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), ctx.Router))
 }
