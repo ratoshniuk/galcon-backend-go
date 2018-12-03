@@ -1,8 +1,8 @@
 package incoming
 
 import (
-	"awesomeProject/messages/outgoing"
-	"awesomeProject/models"
+	"galcon-backend-go/messages/outgoing"
+	"galcon-backend-go/models"
 	"encoding/json"
 	"net"
 )
