@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/fatih/color" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/gocql/gocql" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/golang/snappy" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/gorilla/mux" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/gorilla/websocket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/hailocab/go-hostpool" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/hokaccha/go-prettyjson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/jinzhu/gorm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/jinzhu/inflection" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/github.com/satori/go.uuid" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/galcon-backend-go/src/gopkg.in/inf.v0" vcs="Git" />
+  </component>
+</project>
