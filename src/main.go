@@ -1,90 +1,87 @@
 package main
 
 import (
-    //"app"
     "bufio"
-    //"flag"
-    "fmt"
+    "encoding/json"
+    "galcon-backend-go/container"
     "galcon-backend-go/messages/incoming"
     "galcon-backend-go/models"
-    //"galcon-backend-go/rest"
-    //"galcon-backend-go/ws"
+    "log"
     "net"
     "os"
-    "strings"
 )
 
+const (
+    ConnHost = "localhost"
+    ConnPort = "8081"
+    ConnType = "tcp"
+)
+
+type handler func(*models.Player, *container.GamesContainer, *json.RawMessage)
+
+var RequestHandlers = map[string] handler {
+    "player_ready": incoming.HandlePlayerReadyRequest,
+    "join": incoming.HandlePlayerJoinRequest,
+    "leave": incoming.HandlePlayerLeaveRequest,
+}
+
 func main() {
+    listener, err := net.Listen(ConnType, ConnHost + ":" + ConnPort)
+    if err != nil {
+        log.Println("Error listening:", err.Error())
+        os.Exit(1)
+    }
+    defer listener.Close()
+    log.Println("Listening on " + ConnHost + ":" + ConnPort)
 
-    //flag.Parse()
-    //
-    //context := &app.GlobalContext{}
-    //context.Initialize()
-    //context.SetRestAPI(&rest.Routes)
-    //context.SetSocketAPI(&ws.Routes)
-    //
-    //context.Run()
+    gameContainer:= container.NewGamesContainer()
+    go gameContainer.Run()
 
-    service := "127.0.0.1:8081"
-    tcpAddr, err := net.ResolveTCPAddr("tcp", service)
-    fmt.Println("it works!")
-    checkError(err)
-
-    listener, err := net.ListenTCP("tcp", tcpAddr)
-    checkError(err)
     for {
-
         conn, err := listener.Accept()
         if err != nil {
-            fmt.Println("Error accepting: ", err.Error())
+            log.Println("Error accepting: ", err.Error())
             os.Exit(1)
         }
 
-        container:=populateTestDatabase()//for testing purposes only
-        go handleRequest(container,conn)
+        player:= models.Player{
+            Connection: &conn,
+        }
+        go handleRequest(gameContainer,&player)
     }
-
 }
-func checkError(err error) {
+
+func handleRequest(container *container.GamesContainer, player *models.Player) {
+
+    for {
+        msgType, payload, err := readMessage(player.Connection)
+        if err {
+            log.Printf("Connection closed for player with id: %d and session id: %d", player.Id, player.SessionId)
+            return
+        }
+
+        requestHandler:= RequestHandlers[msgType]
+        if requestHandler != nil {
+            requestHandler(player, container, payload)
+        }
+    }
+}
+
+func readMessage(conn *net.Conn) (string, *json.RawMessage, bool) {
+    request, err := bufio.NewReader(*conn).ReadString('\n')
     if err != nil {
-        fmt.Println("Fatal error ", err.Error())
-        os.Exit(1)
-    }
-}
-
-func handleRequest(container *models.GamesContainer,conn net.Conn) {
-    message, err := bufio.NewReader(conn).ReadString('\n')
-    if err != nil {
-        fmt.Println("Error reading:", err.Error())
+        log.Println("Error reading:", err.Error())
+        return "", nil, true
     }
 
-    parts := strings.Split(message,";")
-    messageType, jsonBody := parts[0],parts[1]
-    if messageType =="player_ready"{
-        incoming.HandlePlayerReadyRequest(conn,container, jsonBody)
-    }
+    log.Printf("Received message: %s", request)
 
-}
-
-func populateTestDatabase() *models.GamesContainer{
-    container :=models.GamesContainer{}
-    session:=models.GameSession{
-        Id:1,
-        Active:0,
-        MaxPlayersCount:2,
+    var payload json.RawMessage
+    msg := models.Message {
+        Payload: &payload,
     }
-    session1:=models.GameSession{
-        Id:2,
-        Active:0,
-        MaxPlayersCount:2,
+    if err := json.Unmarshal([]byte(request), &msg); err != nil {
+        log.Fatal(err)
     }
-    session2:=models.GameSession{
-        Id:3,
-        Active:0,
-        MaxPlayersCount:2,
-    }
-    models.AddGameSession(&container,&session)
-    models.AddGameSession(&container,&session1)
-    models.AddGameSession(&container,&session2)
-    return &container
+    return msg.Type, &payload, false
 }
