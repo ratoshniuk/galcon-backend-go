@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type Message struct {
+	Type string
+	Payload interface{}
+}
+
 type Planet struct {
 	Id int
 	Size int
@@ -26,22 +31,42 @@ type Group struct {
 
 type Player struct {
 	Id int
-	Connection net.Conn
+	SessionId int
+	Connection *net.Conn
 	Login string
-	Ready int
+	Ready bool
 }
 
 type GameSession struct {
 	Id int
-	Active int
+	Active bool
 	MaxPlayersCount int
 	Planets []*Planet
 	Groups []*Group
-	Players []*Player
+	Players map[int] *Player
 }
 
-type GamesContainer struct {
-	GameSessions []*GameSession
+func (session *GameSession) IsFull() bool {
+	return len(session.Players) == session.MaxPlayersCount
 }
 
+func (session *GameSession) AddPlayerToSession(player *Player)  bool {
+	if session.IsFull() {
+		return false
+	}
 
+	player.Id = len(session.Players)
+	player.SessionId = session.Id
+	session.Players[player.Id] = player
+	return true
+}
+
+func (session *GameSession) RemovePlayerFromSession(player *Player) {
+	if session.Active {
+		player.Ready = false
+	} else {
+		delete(session.Players, player.Id)
+	}
+
+	(*player.Connection).Close()
+}
