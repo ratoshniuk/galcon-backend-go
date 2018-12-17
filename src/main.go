@@ -23,6 +23,7 @@ var RequestHandlers = map[string] handler {
     "player_ready": incoming.HandlePlayerReadyRequest,
     "join": incoming.HandlePlayerJoinRequest,
     "leave": incoming.HandlePlayerLeaveRequest,
+    "send_ships": incoming.HandleSendShipsRequest,
 }
 
 func main() {

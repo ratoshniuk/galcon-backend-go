@@ -20,7 +20,7 @@ func HandlePlayerReadyRequest(player *models.Player, container* container.GamesC
 		panic("Wrong json!")
 	}
 
-	updatedPlayer := container.SetPlayerReady(requestBody.SessionId,requestBody.PlayerId)
+	updatedPlayer := container.SetPlayerReady(player.SessionId, player.Id)
 	container.UpdateSessionStatus(requestBody.SessionId)
 
 	players := container.GetPlayersFromSession(requestBody.SessionId)

@@ -16,6 +16,7 @@ type Planet struct {
 	Population int
 	Coordx int
 	Coordy int
+	Player *Player
 }
 
 type Group struct {
@@ -27,6 +28,7 @@ type Group struct {
 	SourcePlanet Planet
 	SourceGroup *Group//only if we implement redirect
 	ArrivalTime	time.Time
+	Player Player
 }
 
 type Player struct {
@@ -59,6 +61,26 @@ func (session *GameSession) AddPlayerToSession(player *Player)  bool {
 	player.SessionId = session.Id
 	session.Players[player.Id] = player
 	return true
+}
+
+func(session *GameSession) GetFreePlanet() *Planet {
+	for _, planet := range session.Planets {
+		if planet.Player == nil {
+			return planet
+		}
+	}
+
+	return nil
+}
+
+func(session *GameSession) GetPlanetById(planetId int) *Planet {
+	for _, planet := range session.Planets {
+		if planet.Id == planetId {
+			return planet
+		}
+	}
+
+	return nil
 }
 
 func (session *GameSession) RemovePlayerFromSession(player *Player) {
