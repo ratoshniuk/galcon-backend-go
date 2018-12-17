@@ -25,7 +25,9 @@ func (container *GamesContainer) Run() {
 		case player := <-container.JoinQueue:
 			session := container.findAvailableToJoinSession()
 			session.AddPlayerToSession(player)
-			outgoing.NotifyPlayerJoined(session, player)
+			freePlanet := session.GetFreePlanet()
+			freePlanet.Player = player
+			outgoing.NotifyPlayerJoined(session, player, freePlanet)
 		case player := <-container.LeaveQueue:
 			session := container.GetGameSessionById(player.SessionId)
 			session.RemovePlayerFromSession(player)
@@ -45,7 +47,19 @@ func (container *GamesContainer) findAvailableToJoinSession() *models.GameSessio
 		Id: len(container.GameSessions),
 		MaxPlayersCount: 2,
 		Players: make(map[int] *models.Player),
+		Planets: container.generatePlanets(),
 	}
 	container.GameSessions[newSession.Id] = newSession
 	return newSession
+}
+
+func (container *GamesContainer) generatePlanets() []*models.Planet {
+	// TODO implement map generation
+	return []*models.Planet{
+		&models.Planet{Id: 1, Size: 6, Coordx: 1, Coordy: 1, Population: 45, Player:nil},
+		&models.Planet{Id: 2, Size: 6, Coordx: 9, Coordy: 9, Population: 45, Player:nil},
+		&models.Planet{Id: 3, Size: 4, Coordx: 2, Coordy: 8, Population: 30, Player:nil},
+		&models.Planet{Id: 4, Size: 4, Coordx: 8, Coordy: 2, Population: 40, Player:nil},
+		&models.Planet{Id: 5, Size: 4, Coordx: 4, Coordy: 4, Population: 50, Player:nil},
+	}
 }
